@@ -28,7 +28,7 @@ int main(void)
     	EICRA |= (1<<ISC01);                    // config. interrup. INT0 sensible a flanco asc.
     	EIMSK |= (1<<INT0);						//habilita interrp. interna INT0
     	EIFR = 0x00;						    // borra flag INTF0 para evitar interrup. espúrea
-    	sei();									// activa interrupciones globalmente
+    	sei();									// activa interrupciones globalmente gddsfsdf
 
     while (1) 
     {
