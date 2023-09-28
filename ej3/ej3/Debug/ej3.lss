@@ -13,21 +13,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000002d4  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000038  00000000  00000000  00000314  2**0
+  5 .debug_aranges 00000040  00000000  00000000  00000314  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000e09  00000000  00000000  0000034c  2**0
+  6 .debug_info   00000e58  00000000  00000000  00000354  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000c6f  00000000  00000000  00001155  2**0
+  7 .debug_abbrev 00000c6f  00000000  00000000  000011ac  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   0000041d  00000000  00000000  00001dc4  2**0
+  8 .debug_line   00000451  00000000  00000000  00001e1b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000060  00000000  00000000  000021e4  2**2
+  9 .debug_frame  00000070  00000000  00000000  0000226c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000059a  00000000  00000000  00002244  2**0
+ 10 .debug_str    00000592  00000000  00000000  000022dc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000015b  00000000  00000000  000027de  2**0
+ 11 .debug_loc    000001a3  00000000  00000000  0000286e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000028  00000000  00000000  00002939  2**0
+ 12 .debug_ranges 00000030  00000000  00000000  00002a11  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -193,31 +193,22 @@ Disassembly of section .text:
  122:	6e cf       	rjmp	.-292    	; 0x0 <__vectors>
 
 00000124 <pollP2>:
-		}
-	}
+	return 1;
 }
-
-int pollP2(){							//cambiar secuencia
+void pollP3(){							//cambiar secuencia
 	if (!(PIND & (1 << PORTD2))){
+		_delay_ms(10);
+		if (PIND & (1 << PORTD2)) cuenta++;
  124:	4a 99       	sbic	0x09, 2	; 9
  126:	1c c0       	rjmp	.+56     	; 0x160 <pollP2+0x3c>
-	#else
-		//round up by default
-		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
-	#endif
-
-	__builtin_avr_delay_cycles(__ticks_dc);
  128:	8f e3       	ldi	r24, 0x3F	; 63
  12a:	9c e9       	ldi	r25, 0x9C	; 156
  12c:	01 97       	sbiw	r24, 0x01	; 1
  12e:	f1 f7       	brne	.-4      	; 0x12c <pollP2+0x8>
  130:	00 c0       	rjmp	.+0      	; 0x132 <pollP2+0xe>
  132:	00 00       	nop
-		_delay_ms(10);
-		if (PIND & (1 << PORTD2)){
  134:	4a 9b       	sbis	0x09, 2	; 9
  136:	17 c0       	rjmp	.+46     	; 0x166 <pollP2+0x42>
-			if (marcha==0) marcha=1;
  138:	80 91 04 02 	lds	r24, 0x0204	; 0x800204 <marcha>
  13c:	90 91 05 02 	lds	r25, 0x0205	; 0x800205 <marcha+0x1>
  140:	00 97       	sbiw	r24, 0x00	; 0
@@ -227,25 +218,22 @@ int pollP2(){							//cambiar secuencia
  148:	30 93 05 02 	sts	0x0205, r19	; 0x800205 <marcha+0x1>
  14c:	20 93 04 02 	sts	0x0204, r18	; 0x800204 <marcha>
  150:	08 95       	ret
-			else marcha=0;
  152:	10 92 05 02 	sts	0x0205, r1	; 0x800205 <marcha+0x1>
  156:	10 92 04 02 	sts	0x0204, r1	; 0x800204 <marcha>
-		return 0;
  15a:	80 e0       	ldi	r24, 0x00	; 0
  15c:	90 e0       	ldi	r25, 0x00	; 0
  15e:	08 95       	ret
-		}
-	}
-	return 1;
  160:	81 e0       	ldi	r24, 0x01	; 1
  162:	90 e0       	ldi	r25, 0x00	; 0
  164:	08 95       	ret
  166:	81 e0       	ldi	r24, 0x01	; 1
  168:	90 e0       	ldi	r25, 0x00	; 0
-}
  16a:	08 95       	ret
 
 0000016c <select_umbral>:
+	}
+			
+}
 int select_umbral (){
  16c:	cf 93       	push	r28
  16e:	df 93       	push	r29
@@ -258,6 +246,12 @@ int select_umbral (){
 			if (!(PIND & (1 << PORTD1))){ //aumenta el umbral
  176:	49 99       	sbic	0x09, 1	; 9
  178:	08 c0       	rjmp	.+16     	; 0x18a <select_umbral+0x1e>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
  17a:	8f e3       	ldi	r24, 0x3F	; 63
  17c:	9c e9       	ldi	r25, 0x9C	; 156
  17e:	01 97       	sbiw	r24, 0x01	; 1
@@ -272,7 +266,7 @@ int select_umbral (){
  18a:	cc df       	rcall	.-104    	; 0x124 <pollP2>
  18c:	89 2b       	or	r24, r25
  18e:	29 f0       	breq	.+10     	; 0x19a <select_umbral+0x2e>
-	return 1;
+			
 }
 int select_umbral (){
 	int inc=0; int stop=1;
@@ -332,7 +326,7 @@ void pollP1(){
  1e2:	08 95       	ret
 
 000001e4 <main>:
-int pollP2();
+void pollP3();
 int select_umbral();
 
 int main(void)

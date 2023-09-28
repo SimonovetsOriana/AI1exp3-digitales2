@@ -17,6 +17,7 @@ int cuenta=0;
 
 void pollP1();
 int pollP2();
+void pollP3();
 int select_umbral();
 
 int main(void)
@@ -28,7 +29,7 @@ int main(void)
     	EICRA |= (1<<ISC01);                    // config. interrup. INT0 sensible a flanco asc.
     	EIMSK |= (1<<INT0);						//habilita interrp. interna INT0
     	EIFR = 0x00;						    // borra flag INTF0 para evitar interrup. espúrea
-    	sei();									// activa interrupciones globalmente gddsfsdf
+    	sei();									// activa interrupciones globalmente
 
     while (1) 
     {
@@ -57,6 +58,13 @@ int pollP2(){							//cambiar secuencia
 		}
 	}
 	return 1;
+}
+void pollP3(){							//cambiar secuencia
+	if (!(PIND & (1 << PORTD2))){
+		_delay_ms(10);
+		if (PIND & (1 << PORTD2)) cuenta++;
+	}
+			
 }
 int select_umbral (){
 	int inc=0; int stop=1;
