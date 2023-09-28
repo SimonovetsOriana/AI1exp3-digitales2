@@ -26,10 +26,12 @@ int main(void)
     	PORTA = 0x00;							//inicializo apagado
     	DDRD &= ~((1 << DDD0) | (1 << DDD1) |(1 << DDD2));   //puertos D como entrada
     	//PORTD |= ((1 << PORTD0) | (1 << PORTD1));
-    	EICRA |= (1<<ISC01);                    // config. interrup. INT0 sensible a flanco asc.
-    	EIMSK |= (1<<INT0);						//habilita interrp. interna INT0
-    	EIFR = 0x00;						    // borra flag INTF0 para evitar interrup. esp�rea
-    	sei();									// activa interrupciones globalmente
+		TCCR1B = (1 << WGM12); // Modo CTC1
+		OCR1A = 625;
+		TIMSK1 = (1 << OCIE1A); // Interrupción por igualación TCNT1 == OCR1A
+		TCCR1B |= (1 << CS12);  // Prescaler 256. Inicia el conteo
+		sei();                  // Setea bit global de interrupciones
+
 
     while (1) 
     {
